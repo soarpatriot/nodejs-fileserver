@@ -4,7 +4,7 @@
 
 
 (function() {
-  var fs, http, path, setting;
+  var fs, http, mime, path, setting, zlib;
 
   http = require('http');
 
@@ -12,32 +12,46 @@
 
   fs = require('fs');
 
+  zlib = require("zlib");
+
   setting = require('../config/setting');
+
+  mime = require('../config/mime');
 
   exports.show = function(req, res) {
     var fileId, realPath;
     fileId = req.params.id;
     fileId = '12.png';
     realPath = path.resolve(setting.rootPath() + 'assets/files/' + fileId);
+    /*
+        ext = path.extname(realPath)
+        ext = ext ? ext.slice(1)
+        contentType = mime[ext] || "text/plain"
+        res.set(200, {'Content-Type': contentType});
+    */
+
     console.log('realPaht: ' + realPath);
     return fs.exists(realPath, function(exists) {
+      var acceptEncoding, raw;
       if (!exists) {
         return res.send('No exist!');
       } else {
-        return fs.readFile(realPath, 'binary', function(err, file) {
-          if (err) {
-            res.writeHead(500, {
-              'Content-Type': 'text/html'
-            });
-            return res.end(err);
-          } else {
-            res.writeHead(200, {
-              'Content-Type': 'text/html'
-            });
-            res.write(file, 'binary');
-            return res.end();
-          }
-        });
+        raw = fs.createReadStream(realPath);
+        acceptEncoding = req.headers['accept-encoding'] || "";
+        if (acceptEncoding.match(/\bgzip\b/)) {
+          res.set({
+            'Content-Encoding': 'gzip'
+          });
+          return raw.pipe(zlib.createGzip()).pipe(res);
+        } else if (acceptEncoding.match(/\bdeflate\b/)) {
+          res.set({
+            'Content-Encoding': 'gzip'
+          });
+          return raw.pipe(zlib.createDeflate()).pipe(res);
+        } else {
+          res.set(200, "Ok");
+          return raw.pipe(res);
+        }
       }
     });
   };
