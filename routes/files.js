@@ -4,7 +4,7 @@
 
 
 (function() {
-  var fs, http, path;
+  var fs, http, path, setting;
 
   http = require('http');
 
@@ -12,15 +12,19 @@
 
   fs = require('fs');
 
-  exports.show(function(req, res) {
-    var fileId, readPath;
+  setting = require('../config/setting');
+
+  exports.show = function(req, res) {
+    var fileId, realPath;
     fileId = req.params.id;
-    readPath = '';
-    return path.exists(realPath, exists(function() {
+    fileId = '12.png';
+    realPath = path.resolve(setting.rootPath() + 'assets/files/' + fileId);
+    console.log('realPaht: ' + realPath);
+    return fs.exists(realPath, function(exists) {
       if (!exists) {
         return res.send('No exist!');
       } else {
-        return fs.readFile(readPath, 'binary', function(err, file) {
+        return fs.readFile(realPath, 'binary', function(err, file) {
           if (err) {
             res.writeHead(500, {
               'Content-Type': 'text/html'
@@ -30,12 +34,12 @@
             res.writeHead(200, {
               'Content-Type': 'text/html'
             });
-            res.write(file, "binary");
-            return res.end;
+            res.write(file, 'binary');
+            return res.end();
           }
         });
       }
-    }));
-  });
+    });
+  };
 
 }).call(this);
