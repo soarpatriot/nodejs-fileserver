@@ -19,19 +19,27 @@
   mime = require('../config/mime');
 
   exports.show = function(req, res) {
-    var contentType, ext, fileId, realPath;
+    var contentType, ext, extName, fileId, realPath;
     fileId = req.params.id;
     realPath = path.resolve(setting.rootPath() + 'assets/files/' + fileId);
     ext = path.extname(realPath);
-    ext = ext != null ? ext : ext.slice(1);
-    contentType = mime[ext] || "text/plain";
-    res.set({
-      'Content-Type': contentType
-    });
+    extName = ext.slice(1);
+    if (ext) {
+      ext = extName;
+    } else {
+      ext = 'unkonwn';
+    }
+    contentType = "text/plain";
+    if (mime.types[ext]) {
+      contentType = mime.types[ext];
+    }
     console.log('realPaht: ' + realPath);
     return fs.exists(realPath, function(exists) {
       var acceptEncoding, raw;
       if (!exists) {
+        res.set(404, {
+          'Content-Type': "text/plain"
+        });
         return res.send('No exist!');
       } else {
         raw = fs.createReadStream(realPath);
@@ -47,7 +55,9 @@
           });
           return raw.pipe(zlib.createDeflate()).pipe(res);
         } else {
-          res.set(200, "Ok");
+          res.set(200, {
+            'Content-Type': contentType
+          });
           return raw.pipe(res);
         }
       }
