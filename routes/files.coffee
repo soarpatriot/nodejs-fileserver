@@ -12,15 +12,15 @@ mime = require('../config/mime')
 exports.show = (req,res)->
 
     fileId = req.params.id
-    fileId = '12.png'
+    ##fileId = '12.png'
     realPath = path.resolve(setting.rootPath() + 'assets/files/'+fileId)
 
-    ###
-        ext = path.extname(realPath)
-        ext = ext ? ext.slice(1)
-        contentType = mime[ext] || "text/plain"
-        res.set(200, {'Content-Type': contentType});
-    ###
+    ##set content mime type
+    ext = path.extname(realPath)
+    ext = ext ? ext.slice(1)
+    contentType = mime[ext] || "text/plain"
+    res.set({'Content-Type': contentType})
+
     console.log('realPaht: '+realPath)
 
     fs.exists realPath, (exists)->

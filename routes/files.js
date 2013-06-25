@@ -19,17 +19,15 @@
   mime = require('../config/mime');
 
   exports.show = function(req, res) {
-    var fileId, realPath;
+    var contentType, ext, fileId, realPath;
     fileId = req.params.id;
-    fileId = '12.png';
     realPath = path.resolve(setting.rootPath() + 'assets/files/' + fileId);
-    /*
-        ext = path.extname(realPath)
-        ext = ext ? ext.slice(1)
-        contentType = mime[ext] || "text/plain"
-        res.set(200, {'Content-Type': contentType});
-    */
-
+    ext = path.extname(realPath);
+    ext = ext != null ? ext : ext.slice(1);
+    contentType = mime[ext] || "text/plain";
+    res.set({
+      'Content-Type': contentType
+    });
     console.log('realPaht: ' + realPath);
     return fs.exists(realPath, function(exists) {
       var acceptEncoding, raw;

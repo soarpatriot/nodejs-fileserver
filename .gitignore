@@ -1,5 +1,5 @@
 lib-cov
-.idea
+.idea/
 node_modules
 *.seed
 *.log
