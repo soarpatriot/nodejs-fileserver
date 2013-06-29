@@ -9,7 +9,7 @@ upload = require('jquery-file-upload-middleware')
 files = require './routes/files'
 
 upload.configure
-  uploadDir:  __dirname + '/public/models'
+  uploadDir:  __dirname + '/assets/files'
   uploadUrl: '/upload'
 
 
@@ -33,7 +33,7 @@ app.configure ->
     upload.on 'end',  (fileInfo) ->
       urlStr = fileInfo.url
       console.log "urlStr: "+urlStr
-      fileInfo.url = urlStr.replace("/upload","/models")
+      fileInfo.url = urlStr.replace("/upload","/files")
 
 
     app.use(express.bodyParser())

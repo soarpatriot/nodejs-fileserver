@@ -15,7 +15,7 @@
   files = require('./routes/files');
 
   upload.configure({
-    uploadDir: __dirname + '/public/models',
+    uploadDir: __dirname + '/assets/files',
     uploadUrl: '/upload'
   });
 
@@ -40,7 +40,7 @@
       var urlStr;
       urlStr = fileInfo.url;
       console.log("urlStr: " + urlStr);
-      return fileInfo.url = urlStr.replace("/upload", "/models");
+      return fileInfo.url = urlStr.replace("/upload", "/files");
     });
     app.use(express.bodyParser());
     app.use(express.methodOverride());

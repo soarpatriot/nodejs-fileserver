@@ -31,7 +31,8 @@ a simple static file server, upload file to this server and access file via api
          "delete_url":"http://localhost:3000/upload/flamingo%20(13).js"}
 
 3. access file api<br />
-        http://localhost:8080/files/:id     //:id is json data name like flamingo (13).js
+
+        http://localhost:8080/files/:id         //:id is json data name like flamingo (13).js
 
 
 
