@@ -9,9 +9,9 @@ upload = require('jquery-file-upload-middleware')
 files = require './routes/files'
 
 upload.configure
-  uploadDir:  __dirname + '/assets/files'
+  uploadDir:  __dirname + '/public/models'
   uploadUrl: '/upload'
-  targetUrl: '/files'
+
 
 app = express()
 app.configure ->
@@ -33,7 +33,7 @@ app.configure ->
     upload.on 'end',  (fileInfo) ->
       urlStr = fileInfo.url
       console.log "urlStr: "+urlStr
-      fileInfo.url = urlStr.replace("/upload","/files")
+      fileInfo.url = urlStr.replace("/upload","/models")
 
 
     app.use(express.bodyParser())
@@ -44,6 +44,14 @@ app.configure ->
 app.configure 'development', ->
     app.use express.errorHandler
 
+# set cross domain allow, current allow access
+app.all '*', (req, res, next) ->
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8");
+    next();
 
 app.get('/files/:id', files.show)
 

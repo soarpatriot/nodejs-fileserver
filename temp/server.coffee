@@ -6,18 +6,27 @@ fs = require('fs')
 PORT = 3000;
 zlib = require("zlib")
 
-mime = require('./config/mime')
-setting = require('./config/setting')
+mime = require('./../config/mime')
+setting = require('./../config/setting')
 
 server = http.createServer (req,res)->
-    ##fileId = req.params.id
-  fileId = '12.png'
-  realPath = path.resolve(setting.rootPath() + 'assets/files/'+fileId)
-  ext = path.extname(realPath)
-  ext = ext ? ext.slice(1)
-  contentType = mime[ext] || "text/plain"
-  res.writeHead(200, {'Content-Type': contentType});
 
+  fileId = req.params.id
+  realPath = path.resolve(setting.rootPath() + 'assets/files/'+fileId)
+
+  ##set content mime type
+  ext = path.extname(realPath)
+  extName = ext.slice(1)
+  if ext
+    ext = extName
+  else
+    ext = 'unkonwn'
+
+  contentType = "text/plain"
+  if mime.types[ext]
+    contentType = mime.types[ext]
+
+  console.log('realPaht: '+realPath)
 
   console.log('realPaht: '+realPath)
   fs.exists realPath, (exists)->
