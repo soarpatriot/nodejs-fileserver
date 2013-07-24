@@ -23,7 +23,7 @@ app.configure ->
     app.use(express.logger('dev'))
 
     #file upload
-    app.use '/upload', (req, res, next) ->
+    app.use '/upload', (req, res, next) -> 
       upload.fileHandler()(req, res, next)
     upload.on 'begin', (fileInfo) ->
       originName= fileInfo.originalName
