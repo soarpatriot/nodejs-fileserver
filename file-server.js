@@ -61,7 +61,7 @@
     return next();
   });
 
-  app.get('/files/:id', files.show);
+  app.get('/files/:id', files.display);
 
   http.createServer(app).listen(app.get('port'), function() {
     return console.log("Express server listening on port " + app.get('port'));
