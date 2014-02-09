@@ -60,7 +60,7 @@ exports.show = (req,res)->
 
 exports.display = (req,res)->
 
-  fileId = req.params.id
+  fileId = req.params[0]
   ##fileId = '12.png'
   realPath = path.resolve(setting.rootPath() + 'assets/files/'+fileId)
 

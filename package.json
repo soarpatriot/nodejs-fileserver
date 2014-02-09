@@ -12,6 +12,7 @@
     "blueimp-file-upload-node": ">=2.0.0",
     "jquery-file-upload-middleware":"0.0.8",
     "underscore":">=1.4.4",
-    "node-uuid":"1.4.0"
+    "node-uuid":"1.4.0",
+    "adm-zip":"0.4.3"
   }
 }

@@ -76,7 +76,7 @@
 
   exports.display = function(req, res) {
     var contentType, ext, extName, fileId, realPath;
-    fileId = req.params.id;
+    fileId = req.params[0];
     realPath = path.resolve(setting.rootPath() + 'assets/files/' + fileId);
     ext = path.extname(realPath);
     extName = ext.slice(1);
