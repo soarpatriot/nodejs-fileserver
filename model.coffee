@@ -7,6 +7,7 @@ AdmZip = require 'adm-zip'
 fs = require 'fs'
 uuid = require('node-uuid');
 upload = require('jquery-file-upload-middleware')
+exec = require('child_process').exec;
 
 files = require './routes/files'
 
@@ -45,15 +46,20 @@ app.configure ->
       zip.extractAllTo(fileFolder, true);
 
       fileNameArray = fs.readdirSync fileFolder
-      fileNameArray.forEach ( name) ->
-        if -1!= name.indexOf('.js')
-          console.log('exists')
-          pos = urlStr.indexOf('/upload')
-          fileUrlPath = urlStr.substring(0,pos)
-          console.log('fileUrlPath: '+fileUrlPath)
 
-          fileInfo.url = fileUrlPath+"/files/models/"+folder+'/'+name
-          console.log('fileInfo.url: '+fileInfo.url)
+      fileNameArray.forEach ( name) ->
+        pos = name.indexOf('.obj')
+
+        if -1!= pos
+
+          jsName = name.substring(0,pos)+ '.js'
+          posi = urlStr.indexOf('/upload')
+          fileUrlPath = urlStr.substring(0,posi)
+          fileInfo.url = fileUrlPath+"/files/models/"+folder+'/'+jsName
+
+          exec 'python convert_obj_three.py -i '+fileFolder+'/'+ name + ' -o '+fileFolder+'/'+jsName, (error, stdout, stderr) ->
+            if (error)
+              console.log('exec error: ' + error)
 
 
 
